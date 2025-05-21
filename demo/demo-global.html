@@ -1,16 +1,35 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Document</title>
-  </head>
-  <body>
-    <script src="../node_modules/es5-shim/es5-shim.js"></script>
-    <script src="../node_modules/es5-shim/es5-sham.js"></script>
 
-    <script src="../dist/index.aio.js"></script>
-    <script>
-      console.log(window['canvasFrameAnimation'].name);
-    </script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <title>Document</title>
+</head>
+
+<body>
+  <div id='container' style='width:91px;height: 91px;overflow: hidden;border-radius: 30px;'></div>
+  <script src="../node_modules/es5-shim/es5-shim.js"></script>
+  <script src="../node_modules/es5-shim/es5-sham.js"></script>
+
+  <script src="../dist/index.aio.js"></script>
+  <script>
+    console.log(window['canvasFrameAnimation'].name);
+    new window['canvasFrameAnimation']({
+      container: document.querySelector('#container'),
+      name: "staticAniPerson",
+      width: 280,
+      height: 280,
+      img: "https://sslstatic.cxisc.com/img/ai/img/newFile_compressed.3bc0f8297067e82c.png",
+      firstImg:
+        "https://sslstatic.cxisc.com/img/ai/img/jin_tou30001.ee9c975959ff1728.jpg",
+      totalKeyNum: 70,
+      count: 0,
+      duration: "3s",
+      durationDefault: "3s",
+      autoplay: true,
+      interval: 10,
+    })
+  </script>
+</body>
+
 </html>
