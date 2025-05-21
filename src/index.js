@@ -1,71 +1,74 @@
+const SPRITE_FRAME_ANIMATION_VERSION = '1.0.0';
+const SPRITE_FRAME_ANIMATION_NAME = 'SPRITE_FRAME_ANIMATION_NAME';
+
 class SpriteFrameAnimation {
   constructor(options) {
+    this.version = SPRITE_FRAME_ANIMATION_VERSION;
+    this.initParam();
     this.reset(options);
-    this.setup(options);
+  }
+  initParam() {
+    this.name = ''; //动画名称
+    this.width = 0; //帧动画每帧的宽度
+    this.height = 0; //帧动画每帧的高度
+    this.img = 0; //一个动画的完整序列帧url
+    this.orient = 'left-right'; //关键帧图片的排列方式
+    this.count = 0; //动画循环次数
+    this.delay = 0; //动画延时多久开始
+    this.duration = '1000ms'; //动画持续时间
+    this.autoplay = true;
+    this.currentKey = 0; //开始索引帧
+    this.totalKeyNum = 0; //总帧数据
+    this.paramMd5 = [];
+    this.delayFunc = [];
+    this.spriteArray = [];
+    this.interval = 0;
+    this.isAnimating = false;
+    this.isLoadingImage = true;
+    this.image = null; // 图片实例
   }
   reset(options) {
     // this.emitEnd();
     // this.resetAnimation();
     //ani上的属性，全部赋值一遍
-    const {
-      container,
-      name,
-      width,
-      height,
-      orient = 'left-right',
-      count = 0,
-      delay,
-      duration = '1000ms',
-      frameCount,
-      currentKey = 0,
-      totalKeyNum,
-      autoplay,
-      img,
-      frameRate = 30,
-    } = options;
-    this.name = name; //动画名称
-    this.width = width; //帧动画每帧的宽度
-    this.height = height; //帧动画每帧的高度
-    this.img = img; //一个动画的完整序列帧
-    this.orient = orient; //关键帧图片的排列方式
-    this.count = count; //动画循环次数
-    this.delay = delay; //动画延时多久开始
-    this.duration = duration; //动画延时多久开始
-    this.currentKey = currentKey; //动画延时多久开始
-    this.totalKeyNum = totalKeyNum; //动画延时多久开始
-    this.autoplay = autoplay; //动画延时多久开始
-    this.spriteArray = []; //动画延时多久开始
-    this.image = null;
-    this.delayFunc = [];
-    this.paramMd5 = [];
-    this.interval = 0;
-    // durationDefault: "1000ms", //一个关键帧的动画的持续时间
-    this.frameCount = frameCount;
-    this.frameRate = frameRate;
-    this.currentFrame = 0;
-    this.interval = null;
-    this.canvasRef = document.createElement('canvas');
-    this.canvasRef.width = this.width;
-    this.canvasRef.height = this.height;
-    this.canvasRef.style.width = '100%';
-    this.canvasRef.style.height = '100%';
-    this.isAnimating = false;
-    this.isLoadingImage = true;
-    container.appendChild(this.canvasRef);
-  }
-  async setup(options) {
-    let optionsString = '';
+
     for (let attr in options) {
       this[attr] = options[attr];
+    }
+    const key = SPRITE_FRAME_ANIMATION_NAME + this.name;
+    this.key = key;
+    const oldInstace = window[key];
+    if (this.name && !oldInstace) {
+      window[this.key] = this;
+    } else {
+      return console.warn('动画名称已存在', oldInstace);
+    }
+    if (!this.canvasRef) {
+      const { container } = options;
+      this.canvasRef = document.createElement('canvas');
+      this.canvasRef.width = this.width;
+      this.canvasRef.height = this.height;
+      this.canvasRef.style.width = '100%';
+      this.canvasRef.style.height = '100%';
+      container.appendChild(this.canvasRef);
+    }
+    this.clearFrame();
+    this.init(options);
+  }
+  async init(options) {
+    let optionsString = '';
+    for (let attr in options) {
       optionsString += `${attr}:${options[attr]}`;
     }
-    const randomNum = Math.random();
     this.paramMd5 = optionsString;
+    const randomNum = Math.random();
     if (!this.img) {
       return false;
     }
     const imageInstce = await getImgData(this.img);
     const curMd5 = getOptionsMd5(options, randomNum);
+    // console.log('this.paramMd5', this.paramMd5, curMd5);
+    console.log('this.paramMd5', this.paramMd5 === curMd5);
     if (curMd5 !== this.paramMd5) {
       return false;
     }
@@ -75,9 +78,11 @@ class SpriteFrameAnimation {
     }
     this.image = imageInstce;
     //持续时间
-    let duration = this.durationDefault.match(/^([\d|.]+)ms|([\d|.]+)s$/i);
-    duration = duration[1] || duration[2] * 1000;
-    this.duration = duration;
+    if (typeof this.duration === 'string') {
+      let duration = this.duration.match(/^([\d|.]+)ms|([\d|.]+)s$/i);
+      duration = duration[1] || duration[2] * 1000;
+      this.duration = duration;
+    }
     //每帧的坐标信息
     for (let idx = 0; idx < this.totalKeyNum; ++idx) {
       if (this.orient === 'left-right') {
@@ -94,7 +99,6 @@ class SpriteFrameAnimation {
         fn();
       });
     }
-    console.log('imageInstce', imageInstce);
   }
   start() {
     if (!this.image) {
@@ -109,14 +113,11 @@ class SpriteFrameAnimation {
       return; // 防止重复启动
     }
     this.isAnimating = true;
-    setTimeout(() => {
+    this[this.key] = setTimeout(() => {
       console.log('执行几次');
       drawImg(this, ctx);
     }, this.delay);
     function drawImg(self, ctx) {
-      console.log('self', self.currentKey);
-      console.log('self', self.spriteArray);
-
       let end = false;
       ctx.clearRect(0, 0, self.width, self.height);
       ctx.drawImage(
@@ -136,17 +137,13 @@ class SpriteFrameAnimation {
       } else {
         self.currentKey = 2;
         aniTimes++;
-        end = true;
-        if (self.interval) {
-          // showCover()
-        }
         if (self.count && aniTimes >= self.count) {
           //动画结束
           // emitEnd();
           return;
         }
       }
-      window.initDrawImg = setTimeout(
+      self[self.key] = setTimeout(
         () => {
           drawImg(self, ctx);
         },
@@ -173,27 +170,19 @@ class SpriteFrameAnimation {
       this.height,
     );
   }
-  updateFrame() {
-    const backgroundPositionY = -this.currentFrame * this.spriteHeight;
-    this.element.style.backgroundPosition = `0px ${backgroundPositionY}px`;
-  }
-
-  play() {
-    if (this.interval) return;
-    this.interval = setInterval(() => {
-      this.currentFrame = (this.currentFrame + 1) % this.frameCount;
-      this.updateFrame();
-    }, 1000 / this.frameRate);
-  }
 
   stop() {
-    clearInterval(this.interval);
-    this.interval = null;
+    this.clearFrame();
   }
-
+  clearFrame() {
+    console.log('clearFrame');
+    this.isAnimating = false;
+    clearTimeout(this[this.key]);
+  }
   destroy() {
     this.stop();
-    this.element = null;
+    this.canvasRef.remove();
+    window[this.key] = null;
   }
 }
 // 获取图片数据
