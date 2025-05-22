@@ -5,10 +5,10 @@ var pkg = require('../package.json');
 var version = pkg.version;
 
 var banner = `/*!
- * ${pkg.name} ${version} (https://github.com/CNLHB/canvasFrameAnimation)
- * API https://github.com/CNLHB/canvasFrameAnimation/blob/master/doc/api.md
+ * ${pkg.name} ${version} (https://github.com/CNLHB/spriteFrame)
+ * API https://github.com/CNLHB/spriteFrame/blob/master/doc/api.md
  * Copyright 2017-${new Date().getFullYear()} CNLHB. All Rights Reserved
- * Licensed under MIT (https://github.com/CNLHB/canvasFrameAnimation/blob/master/LICENSE)
+ * Licensed under MIT (https://github.com/CNLHB/spriteFrame/blob/master/LICENSE)
  */
 `;
 
@@ -45,6 +45,6 @@ function getCompiler() {
   });
 }
 
-exports.name = 'canvasFrameAnimation';
+exports.name = 'spriteFrame';
 exports.banner = banner;
 exports.getCompiler = getCompiler;

@@ -27,7 +27,7 @@ class SpriteFrameAnimation {
     this.orient = 'left-right'; //关键帧图片的排列方式
     this.count = 0; //动画循环次数
     this.delay = 0; //动画延时多久开始
-    this.duration = '1000ms'; //动画持续时间
+    this.duration = 1000; //动画持续时间ms
     this.autoplay = true;
     this.currentKey = 0; //开始索引帧
     this.totalKeyNum = 0; //总帧数据
@@ -92,17 +92,17 @@ class SpriteFrameAnimation {
     this.isLoadingImage = false;
     this.image = imageInstce;
     //持续时间
-    if (typeof this.duration === 'string') {
-      let duration = this.duration.match(/^([\d|.]+)ms|([\d|.]+)s$/i);
-      duration = duration[1] || duration[2] * 1000;
-      this.duration = +duration;
-    }
+    // if (typeof this.duration === 'string') {
+    //   let duration = this.duration.match(/^([\d|.]+)ms|([\d|.]+)s$/i);
+    //   duration = duration[1] || duration[2] * 1000;
+    //   this.duration = +duration;
+    // }
     //持续时间
-    if (typeof this.interval === 'string') {
-      let interval = this.interval.match(/^([\d|.]+)ms|([\d|.]+)s$/i);
-      interval = interval[1] || interval[2] * 1000;
-      this.interval = +interval;
-    }
+    // if (typeof this.interval === 'string') {
+    //   let interval = this.interval.match(/^([\d|.]+)ms|([\d|.]+)s$/i);
+    //   interval = interval[1] || interval[2] * 1000;
+    //   this.interval = +interval;
+    // }
     //每帧的坐标信息
     for (let idx = 0; idx < this.totalKeyNum; ++idx) {
       if (this.orient === 'left-right') {

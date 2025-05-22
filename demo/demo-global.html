@@ -15,8 +15,9 @@
 
   <script src="../dist/index.aio.js"></script>
   <script>
-    console.log(window['canvasFrameAnimation'].name);
-    let s1 = new window['canvasFrameAnimation']({
+    console.log(window);
+    console.log(window['spriteFrame'].name);
+    let s1 = new window['spriteFrame']({
       container: document.querySelector('#container'),
       name: "staticAniPerson",
       width: 40,
@@ -25,12 +26,12 @@
       firstImg: "./spritesheet.png",
       totalKeyNum: 6,
       count: 2,
-      duration: "1s",
+      duration: 1000,
       // delay: 1000,
       autoplay: true,
-      // interval: "1s",
+      // interval: 1000,
     })
-    let s3 = new window['canvasFrameAnimation']({
+    let s3 = new window['spriteFrame']({
       container: document.querySelector('#container2'),
       name: "staticAniPerson",
       width: 40,
@@ -39,7 +40,7 @@
       firstImg: "./spritesheet.png",
       totalKeyNum: 6,
       count: 0,
-      duration: "1s",
+      duration: 1000,
       autoplay: true,
     })
     s1.on('end', function () {
@@ -47,14 +48,14 @@
       s1.reset(
         {
           img: "./spritesheet2.png",
-          duration: "10s",
+          duration: 10000,
         }
       )
     })
     s1.on('end', function () {
       console.log('end1');
     })
-    // let s3 = new window['canvasFrameAnimation']({
+    // let s3 = new window['spriteFrame']({
     //   container: document.querySelector('#container'),
     //   name: "staticAniPerson",
     //   width: 40,
@@ -75,7 +76,7 @@
     setTimeout(() => {
       // s1.stop()
     }, 5000);
-    // const t2 = new window['canvasFrameAnimation']({
+    // const t2 = new window['spriteFrame']({
     //   container: document.querySelector('#container1'),
     //   name: "staticAniPerson1",
     //   width: 280,
