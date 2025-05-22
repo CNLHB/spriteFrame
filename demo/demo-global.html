@@ -16,8 +16,8 @@
   <script src="../dist/index.aio.js"></script>
   <script>
     console.log(window);
-    console.log(window['spriteFrame'].name);
-    let s1 = new window['spriteFrame']({
+    console.log(window['SpriteFrame'].name);
+    let s1 = new window['SpriteFrame']({
       container: document.querySelector('#container'),
       name: "staticAniPerson",
       width: 40,
@@ -31,7 +31,7 @@
       autoplay: true,
       // interval: 1000,
     })
-    let s3 = new window['spriteFrame']({
+    let s3 = new window['SpriteFrame']({
       container: document.querySelector('#container2'),
       name: "staticAniPerson",
       width: 40,
@@ -55,7 +55,7 @@
     s1.on('end', function () {
       console.log('end1');
     })
-    // let s3 = new window['spriteFrame']({
+    // let s3 = new window['SpriteFrame']({
     //   container: document.querySelector('#container'),
     //   name: "staticAniPerson",
     //   width: 40,
@@ -76,7 +76,7 @@
     setTimeout(() => {
       // s1.stop()
     }, 5000);
-    // const t2 = new window['spriteFrame']({
+    // const t2 = new window['SpriteFrame']({
     //   container: document.querySelector('#container1'),
     //   name: "staticAniPerson1",
     //   width: 280,

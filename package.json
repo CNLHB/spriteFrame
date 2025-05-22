@@ -3,8 +3,13 @@
   "version": "1.0.0",
   "description": "A user-friendly Sprite frame animation library",
   "keywords": [
-    "sprite frame animation",
+    "雪碧图",
+    "雪碧图帧动画",
+    "canvas",
+    "spriteframe",
+    "spriteframeanimation",
     "sprite frame",
+    "sprite frame animation",
     "sprite",
     "frame",
     "animation"

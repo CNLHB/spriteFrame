@@ -7,7 +7,7 @@
 [![NPM downloads](http://img.shields.io/npm/dm/sprite-frame-animation.svg?style=flat-square)](http://www.npmtrends.com/sprite-frame-animation)
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/CNLHB/sprite-frame-animation.svg)](http://isitmaintained.com/project/CNLHB/sprite-frame-animation "Percentage of issues still open")
 
-好用的雪碧图帧动画库
+基于canvas好用的雪碧图帧动画库
 
 ## ⭐️ 特性
 
@@ -52,7 +52,23 @@ $ npm install --save sprite-frame-animation
 如果你是webpack等环境
 
 ```js
-import spriteframe from 'sprite-frame-animation';
+import SpriteFrame from 'sprite-frame-animation';
+let s1 = SpriteFrame({
+  container: document.querySelector('#container'),
+  name: "staticAniPerson", //动画名称
+  orient: 'left-right',//关键帧图片的排列方式
+  width: 40,//单个帧宽度
+  height: 40,//单个帧高度
+  img: "./spritesheet.png",//一个动画的完整序列帧url
+  firstImg: "./spritesheet.png",//首次加载展位图片url，如何完整的序列帧图片较大，可以用这个
+  totalKeyNum: 6,//总帧数据
+  count: 0,//完整动画播放次数,0表示无限循环
+  duration: 1000,//总帧数据
+  delay: 1000,//延时多久开始
+  autoplay: true,//自动播放
+  interval: 0,//间隔多久播放下一轮动画
+})
+s1.on('end', function () {})
 ```
 
 如果你是浏览器环境

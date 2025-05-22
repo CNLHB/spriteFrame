@@ -45,6 +45,6 @@ function getCompiler() {
   });
 }
 
-exports.name = 'spriteFrame';
+exports.name = 'SpriteFrame';
 exports.banner = banner;
 exports.getCompiler = getCompiler;
