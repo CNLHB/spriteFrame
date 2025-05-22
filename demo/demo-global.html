@@ -7,7 +7,8 @@
 </head>
 
 <body>
-  <div id='container' style='width:91px;height: 91px;overflow: hidden;border-radius: 30px;'></div>
+  <div id='container' style='width:40px;height: 40px;overflow: hidden;'></div>
+  <div id='container2' style='width:40px;height: 40px;overflow: hidden;'></div>
   <div id='container1' style='width:91px;height: 91px;overflow: hidden;border-radius: 30px;'></div>
   <script src="../node_modules/es5-shim/es5-shim.js"></script>
   <script src="../node_modules/es5-shim/es5-sham.js"></script>
@@ -18,24 +19,61 @@
     let s1 = new window['canvasFrameAnimation']({
       container: document.querySelector('#container'),
       name: "staticAniPerson",
-      width: 280,
-      height: 280,
-      img: "https://sslstatic.cxisc.com/img/ai/img/newFile_compressed.3bc0f8297067e82c.png",
-      firstImg:
-        "https://sslstatic.cxisc.com/img/ai/img/jin_tou30001.ee9c975959ff1728.jpg",
-      totalKeyNum: 70,
+      width: 40,
+      height: 40,
+      img: "./spritesheet.png",
+      firstImg: "./spritesheet.png",
+      totalKeyNum: 6,
+      count: 2,
+      duration: "1s",
+      // delay: 1000,
+      autoplay: true,
+      // interval: "1s",
+    })
+    let s3 = new window['canvasFrameAnimation']({
+      container: document.querySelector('#container2'),
+      name: "staticAniPerson",
+      width: 40,
+      height: 40,
+      img: "./spritesheet.png",
+      firstImg: "./spritesheet.png",
+      totalKeyNum: 6,
       count: 0,
       duration: "1s",
       autoplay: true,
-      interval: 0,
     })
+    s1.on('end', function () {
+      console.log('end');
+      s1.reset(
+        {
+          img: "./spritesheet2.png",
+          duration: "10s",
+        }
+      )
+    })
+    s1.on('end', function () {
+      console.log('end1');
+    })
+    // let s3 = new window['canvasFrameAnimation']({
+    //   container: document.querySelector('#container'),
+    //   name: "staticAniPerson",
+    //   width: 40,
+    //   height: 40,
+    //   img: "./spritesheet.png",
+    //   firstImg: "./spritesheet.png",
+    //   totalKeyNum: 6,
+    //   count: 0,
+    //   duration: "1s",
+    //   autoplay: true,
+    //   interval: 0,
+    // })
     // setTimeout(() => {
     //   s1.reset({
     //     duration: "1s",
     //   })
     // }, 10000);
     setTimeout(() => {
-      s1.stop()
+      // s1.stop()
     }, 5000);
     // const t2 = new window['canvasFrameAnimation']({
     //   container: document.querySelector('#container1'),

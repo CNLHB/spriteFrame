@@ -3,11 +3,11 @@
 [![](https://img.shields.io/badge/Powered%20by-jslib%20base-brightgreen.svg)](https://github.com/yanhaijing/jslib-base)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/CNLHB/spriteframe/blob/master/LICENSE)
 [![CI](https://github.com/CNLHB/spriteframe/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/CNLHB/spriteframe/actions/workflows/ci.yml)
-[![npm](https://img.shields.io/badge/npm-0.1.0-orange.svg)](https://www.npmjs.com/package/spriteframe)
-[![NPM downloads](http://img.shields.io/npm/dm/spriteframe.svg?style=flat-square)](http://www.npmtrends.com/spriteframe)
-[![Percentage of issues still open](http://isitmaintained.com/badge/open/CNLHB/spriteframe.svg)](http://isitmaintained.com/project/CNLHB/spriteframe 'Percentage of issues still open')
+[![npm](https://img.shields.io/badge/npm-0.1.0-orange.svg)](https://www.npmjs.com/package/sprite-frame-animation)
+[![NPM downloads](http://img.shields.io/npm/dm/sprite-frame-animation.svg?style=flat-square)](http://www.npmtrends.com/sprite-frame-animation)
+[![Percentage of issues still open](http://isitmaintained.com/badge/open/CNLHB/sprite-frame-animation.svg)](http://isitmaintained.com/project/CNLHB/sprite-frame-animation "Percentage of issues still open")
 
-The best third party `JS|TS` library scaffold.
+A user-friendly Sprite frame animation library.
 
 ## Characteristics
 
@@ -46,25 +46,19 @@ Unit tests guarantee support on the following environment:
 Using npm, download and install the code.
 
 ```bash
-$ npm install --save spriteframe
-```
-
-For node environment：
-
-```js
-const spriteframe = require('spriteframe');
+$ npm install --save sprite-frame-animation
 ```
 
 For webpack or similar environment：
 
 ```js
-import spriteframe from 'spriteframe';
+import spriteframe from 'sprite-frame-animation';
 ```
 
 For browser environment:
 
 ```html
-<script src="node_modules/spriteframe/dist/index.aio.js"></script>
+<script src="node_modules/sprite-frame-animation/dist/index.aio.js"></script>
 ```
 
 ## Documents

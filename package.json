@@ -1,7 +1,14 @@
 {
-  "name": "spriteframe",
-  "version": "0.1.0",
-  "description": "The best third party JS|TS library scaffold",
+  "name": "sprite-frame-animation",
+  "version": "1.0.0",
+  "description": "A user-friendly Sprite frame animation library",
+  "keywords": [
+    "sprite frame animation",
+    "sprite frame",
+    "sprite",
+    "frame",
+    "animation"
+  ],
   "sideEffects": false,
   "main": "dist/index.js",
   "module": "dist/index.esm.js",

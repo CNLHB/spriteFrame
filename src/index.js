@@ -1,11 +1,23 @@
 const SPRITE_FRAME_ANIMATION_VERSION = '1.0.0';
-const SPRITE_FRAME_ANIMATION_NAME = 'SPRITE_FRAME_ANIMATION_NAME';
+const SPRITE_FRAME_ANIMATION_NAME = '_SPRITE_FRAME_ANIMATION_NAME_';
 
 class SpriteFrameAnimation {
   constructor(options) {
     this.version = SPRITE_FRAME_ANIMATION_VERSION;
     this.initParam();
     this.reset(options);
+    this.init(options);
+    this.validateName();
+  }
+  validateName() {
+    const key = SPRITE_FRAME_ANIMATION_NAME + this.name;
+    this.key = key;
+    const oldInstace = window[key];
+    if (this.name && !oldInstace) {
+      window[this.key] = this;
+    } else {
+      console.warn('The animation name already exists', oldInstace);
+    }
   }
   initParam() {
     this.name = ''; //动画名称
@@ -19,32 +31,38 @@ class SpriteFrameAnimation {
     this.autoplay = true;
     this.currentKey = 0; //开始索引帧
     this.totalKeyNum = 0; //总帧数据
-    this.paramMd5 = [];
+    this.paramMd5 = '';
     this.delayFunc = [];
     this.spriteArray = [];
-    this.interval = 0;
+    this.interval = 0; //动画执行间隔时间
     this.isAnimating = false;
     this.isLoadingImage = true;
     this.image = null; // 图片实例
+    this.fImage = null; // 首次渲染图片实例
+    this.eventMap = new Map();
   }
   reset(options) {
-    // this.emitEnd();
-    // this.resetAnimation();
+    const isReload = options.img && this.img && options.img !== this.img;
     //ani上的属性，全部赋值一遍
-
     for (let attr in options) {
       this[attr] = options[attr];
     }
-    const key = SPRITE_FRAME_ANIMATION_NAME + this.name;
-    this.key = key;
-    const oldInstace = window[key];
-    if (this.name && !oldInstace) {
-      window[this.key] = this;
-    } else {
-      return console.warn('动画名称已存在', oldInstace);
+    if (isReload) {
+      console.log('Reload animation resources', options.img);
+      this.init(options);
     }
+  }
+  async initElement(options) {
     if (!this.canvasRef) {
       const { container } = options;
+      if (options.firstImg && !this.image) {
+        const fImg = document.createElement('img');
+        fImg.style.width = '100%';
+        fImg.style.height = '100%';
+        fImg.src = options.firstImg;
+        container.appendChild(fImg);
+        this.fImage = fImg;
+      }
       this.canvasRef = document.createElement('canvas');
       this.canvasRef.width = this.width;
       this.canvasRef.height = this.height;
@@ -52,36 +70,38 @@ class SpriteFrameAnimation {
       this.canvasRef.style.height = '100%';
       container.appendChild(this.canvasRef);
     }
-    this.clearFrame();
-    this.init(options);
+  }
+  async getCurrentImage() {
+    if (this.image && this.image.src === this.img) {
+      return this.image;
+    }
+    return this.image || (await getImgData(this.img));
   }
   async init(options) {
-    let optionsString = '';
-    for (let attr in options) {
-      optionsString += `${attr}:${options[attr]}`;
-    }
-    this.paramMd5 = optionsString;
-    const randomNum = Math.random();
+    this.initElement(options);
+    this.clearFrame();
     if (!this.img) {
       return false;
     }
-    const imageInstce = await getImgData(this.img);
-    const curMd5 = getOptionsMd5(options, randomNum);
-    // console.log('this.paramMd5', this.paramMd5, curMd5);
-    console.log('this.paramMd5', this.paramMd5 === curMd5);
-    if (curMd5 !== this.paramMd5) {
-      return false;
-    }
+    let imageInstce;
+    imageInstce = await this.getCurrentImage();
     if (!imageInstce) {
       console.error(`${this.img} load failed`);
       return false;
     }
+    this.isLoadingImage = false;
     this.image = imageInstce;
     //持续时间
     if (typeof this.duration === 'string') {
       let duration = this.duration.match(/^([\d|.]+)ms|([\d|.]+)s$/i);
       duration = duration[1] || duration[2] * 1000;
-      this.duration = duration;
+      this.duration = +duration;
+    }
+    //持续时间
+    if (typeof this.interval === 'string') {
+      let interval = this.interval.match(/^([\d|.]+)ms|([\d|.]+)s$/i);
+      interval = interval[1] || interval[2] * 1000;
+      this.interval = +interval;
     }
     //每帧的坐标信息
     for (let idx = 0; idx < this.totalKeyNum; ++idx) {
@@ -96,7 +116,7 @@ class SpriteFrameAnimation {
       this.start();
     } else {
       this.delayFunc.forEach((fn) => {
-        fn();
+        fn.call(this);
       });
     }
   }
@@ -109,12 +129,10 @@ class SpriteFrameAnimation {
     let aniTimes = 0;
     //开始动画吧
     if (this.isAnimating) {
-      console.log('已启动');
       return; // 防止重复启动
     }
     this.isAnimating = true;
     this[this.key] = setTimeout(() => {
-      console.log('执行几次');
       drawImg(this, ctx);
     }, this.delay);
     function drawImg(self, ctx) {
@@ -137,9 +155,10 @@ class SpriteFrameAnimation {
       } else {
         self.currentKey = 2;
         aniTimes++;
+        end = true;
         if (self.count && aniTimes >= self.count) {
           //动画结束
-          // emitEnd();
+          self.emitEnd();
           return;
         }
       }
@@ -147,9 +166,7 @@ class SpriteFrameAnimation {
         () => {
           drawImg(self, ctx);
         },
-        end && self.interval
-          ? self.interval * 1000
-          : self.duration / self.totalKeyNum,
+        end && self.interval ? self.interval : self.duration / self.totalKeyNum,
       );
     }
   }
@@ -169,20 +186,44 @@ class SpriteFrameAnimation {
       this.width,
       this.height,
     );
+    // 显示完封面，删除
+    if (this.fImage) {
+      this.fImage.remove();
+    }
   }
-
   stop() {
     this.clearFrame();
   }
   clearFrame() {
     console.log('clearFrame');
+    this.isLoadingImage = true;
     this.isAnimating = false;
     clearTimeout(this[this.key]);
   }
   destroy() {
     this.stop();
     this.canvasRef.remove();
+    if (this.fImage) {
+      this.fImage.remove();
+    }
     window[this.key] = null;
+  }
+  /**
+   * 简单实现事件监听
+   * @param {*} type
+   * @param {*} fn
+   */
+  on(type, fn) {
+    const oldEvents = this.eventMap.get(type);
+    if (oldEvents) {
+      oldEvents.push(fn);
+    } else {
+      const events = [fn];
+      this.eventMap.set(type, events);
+    }
+  }
+  emitEnd() {
+    this.eventMap.get('end') && this.eventMap.get('end').forEach((fn) => fn());
   }
 }
 // 获取图片数据
@@ -201,12 +242,11 @@ function getImgData(url, isNeedCross) {
     image.src = `${url}?${Date.now()}`;
   });
 }
-function getOptionsMd5(options, random) {
-  let optionsString = '';
-  for (let attr in options) {
-    optionsString += `${attr}:${options[attr]}`;
-  }
-  console.log('random', random);
-  return optionsString;
-}
+// function getOptionsMd5(options, random) {
+//   let optionsString = '';
+//   for (let attr in options) {
+//     optionsString += `${attr}:${options[attr]}`;
+//   }
+//   return optionsString + random;
+// }
 export default SpriteFrameAnimation;
